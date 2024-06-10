@@ -1,0 +1,198 @@
+.featured {
+  height: 650px;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  background-color: #11003f;
+  color: white;
+
+  .srcinput{
+    width: 100%;
+    height: 50px;
+  }
+
+  .hero {
+    width: 100%;
+    background-color: #0404a6;
+    color: #000000;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("../../../public/img/man.jpg");
+    display: flex;
+    align-items: center;
+  }
+
+  .container {
+    width: 1400px;
+    display: flex;
+    align-items: center;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      h1 {
+        font-size: 50px;
+
+        span {
+          font-style: italic;
+          font-weight: 300;
+        }
+      }
+
+      .search {
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+
+        .searchInput {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex: 1;
+
+          img {
+            width: 20px;
+            height: 20px;
+            margin: 10px;
+          }
+
+          input {
+            border: none;
+            outline: none;
+            width: 100%;
+
+            &::placeholder {
+              color: gray;
+            }
+          }
+        }
+
+        button {
+          width: 120px;
+          height: 50px;
+          border: none;
+          background-color: #000000;
+          color: white;
+          cursor: pointer;
+        }
+      }
+
+      .popular {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        span {
+          width: max-content;
+        }
+
+        button {
+          width: max-content;
+          color: rgb(0, 0, 0);
+          border: 1px solid rgb(0, 0, 0);
+          padding: 5px 10px;
+          border-radius: 20px;
+          background-color: transparent;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .right {
+      height: 100%;
+      img {
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  // Responsive styles for tablets (max-width: 992px)
+  @media screen and (max-width: 992px) {
+    .container {
+      width: 90%;
+
+      .left {
+        h1 {
+          font-size: 40px;
+        }
+
+        .search {
+          .searchInput {
+            input {
+              width: 80%;
+            }
+          }
+        }
+
+        .popular {
+          flex-wrap: wrap;
+          gap: 5px;
+
+          span {
+            display: block;
+          }
+
+          button {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  // Responsive styles for mobile devices (max-width: 768px)
+  @media screen and (max-width: 768px) {
+    height: auto;
+
+    .hero {
+      padding: 50px 20px;
+    }
+
+    .container {
+      flex-direction: column;
+
+      .left {
+        text-align: center;
+
+        h1 {
+          font-size: 30px;
+        }
+
+        .search {
+          flex-direction: column;
+
+          .searchInput {
+            width: 100%; // Make search input take full width
+            input {
+              width: 100%;
+            }
+          }
+
+          button {
+            width: 100%;
+            margin-top: 10px;
+          }
+        }
+
+        .popular {
+          flex-direction: column;
+          gap: 10px;
+
+          span {
+            display: block;
+          }
+        }
+      }
+
+      .right {
+        display: none; // Hide right content on small screens
+      }
+    }
+  }
+}
