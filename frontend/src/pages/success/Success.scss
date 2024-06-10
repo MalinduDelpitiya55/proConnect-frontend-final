@@ -1,0 +1,47 @@
+.success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background: #f7fafc;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+  
+    .message {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin: 20px;
+      font-size: 18px;
+      line-height: 1.5;
+  
+      .highlight {
+        font-weight: bold;
+        color: #007bff;
+      }
+    }
+  
+    .loader {
+      margin-top: 20px;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 123, 255, 0.2);
+      border-top: 5px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+  

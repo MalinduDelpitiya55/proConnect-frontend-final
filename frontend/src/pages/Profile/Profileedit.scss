@@ -1,0 +1,178 @@
+/* Color variables */
+:root {
+    --white-color: #dbdbdb21;
+    --bg-color: #f5f5f5;
+    --gray-color: #ccc;
+    --primary-color: #042547;
+    --secondary-color: #6c757d;
+    --dark-color: #000000;
+  }
+  
+  /* Base styles */
+  body {
+    background: var(--bg-color) !important;
+    color: var(--dark-color);
+    font-family: Arial, sans-serif;
+  }
+  
+  
+  .editp {
+    padding: 20px;
+  }
+  
+  .cv-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Center the child elements */
+  }
+select {
+  appearance: none;
+  background-color: rgb(3, 3, 3)1;
+  border: 1px solid #3498db ;
+  border-radius: 5px;
+  color: #2c3e50;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color  0.3s, background-color  0.3s, color  0.3s;
+
+  &:hover, &:focus {
+    border-color: #000000;
+    background-color: #000000;
+    color: #ecf0f1;
+    outline: none;
+  }
+
+  option {
+    padding: 10px;
+    background-color: rgb(3, 3, 3)1;
+    color: #2c3e50;
+
+    &:hover, &:focus {
+      background-color: #000000;
+      color: #ecf0f1;
+    }
+  }
+}
+
+/* Optional: Additional styles for the dropdown arrow */
+select::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #2c3e50;
+}
+
+  
+  .profile-section{
+    flex: 1;
+    min-width: 300px;
+    max-width: 300px; /* Optional: to control the max width */
+    text-align: center; /* Center the text */
+    background: var(--white-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(0, 0, 0);
+
+  }
+  .details-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 900px; 
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid var(--gray-color);
+    object-fit: cover;
+  }
+  
+  .name-title {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .contact-info, .skills-list, .interests-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+  
+  .input-field {
+    display: block;
+    width: calc(80% - 20px); /* Ensures padding doesn't overflow */
+    margin: 10px ;
+    border: 1px solid var(--gray-color);
+    border-radius: 4px;
+    padding: 15px;
+    font-size: 16px;
+    background-color: #f0f0f0;
+    color: #333;
+    padding-bottom: 20px;
+  }
+  
+  .descriptionp {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 80%;
+    border: 1px solid var(--gray-color);
+    border-radius: 4px;
+    padding: 15px;
+    font-size: 16px;
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .year {
+    width: 150px;
+  }
+  
+  .submit-section {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .btn-submit {
+    background-color: rgb(0, 1, 77);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left:600px;
+    font-size: 16px;
+  }
+  
+
+  h2, h3, h5 {
+    color: var(--dark-color);
+  }
+  h5{
+    font-size: 18px;
+  }
+  
+  hr {
+    border-top: 1px solid var(--gray-color);
+  }
+  
+  @media screen and (max-width: 990px) {
+    .profile-section, .details-section {
+      flex: 1 1 100%;
+    }
+  
+    .year {
+      width: 100%;
+    }
+  }
+  

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Featured.scss";
 import { useNavigate } from "react-router-dom";
-import SearchICON from "./../../../public/img/search.png";
+import SearchICON from "/img/search.png";
 
 function Featured() {
   const [input, setInput] = useState("");

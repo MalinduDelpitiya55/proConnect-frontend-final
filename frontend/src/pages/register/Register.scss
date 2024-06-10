@@ -1,0 +1,212 @@
+.register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../../../public/img/sobbg.png");
+  background-repeat: no-repeat;
+
+  .conbox {
+    border: 1px solid #dedede;
+    border-radius: 18px;
+    padding-right: 66px;
+    padding-left: 66px;
+    margin-right: 16px;
+    margin-left: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.784);
+    background-color: #ffffffed;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .input1 {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    width: 85%;
+    height: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.488);
+
+    &::placeholder {
+      color: #000000;
+    }
+
+    &:focus {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+
+  .input2 {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.488);
+
+    &::placeholder {
+      color: #000000;
+    }
+
+    &:focus {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  form {
+    width: 960px;
+    padding: 50px 0px;
+    display: flex;
+    gap: 120px;
+
+    h1 {
+      color: rgb(0, 0, 0);
+      margin-bottom: 20px;
+    }
+
+    .left,
+    .right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: space-between;
+
+      label {
+        color: rgb(0, 0, 0);
+        font-size: 18px;
+      }
+
+      input,
+      textarea {
+        padding: 20px;
+      }
+
+      button {
+        border: none;
+        padding: 20px;
+        color: white;
+        font-weight: 500;
+        font-size: 18px;
+        background-color: #060139;
+        cursor: pointer;
+      }
+
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 50px;
+          height: 24px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          -webkit-transition: 0.4s;
+          transition: 0.4s;
+          border-radius: 24px;
+        }
+
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: 0.4s;
+          transition: 0.4s;
+          border-radius: 50%;
+        }
+
+        input:checked + .slider {
+          background-color: #040043;
+        }
+
+        input:focus + .slider {
+          box-shadow: 0 0 1px #090043;
+        }
+
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+      }
+    }
+  }
+
+  .conbox {
+    @media screen and (max-width: 992px) {
+      padding-right: 40px;
+      padding-left: 40px;
+    }
+    @media screen and (max-width: 768px) {
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+  }
+
+  .input1 {
+    @media screen and (max-width: 992px) {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+    @media screen and (max-width: 768px) {
+      padding: 8px 15px;
+      font-size: 12px;
+    }
+  }
+
+  .input2 {
+    @media screen and (max-width: 992px) {
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+
+    @media screen and (max-width: 768px) {
+      padding: 10px 15px;
+      font-size: 12px;
+    }
+  }
+
+  form {
+    @media screen and (max-width: 992px) {
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    @media screen and (max-width: 768px) {
+      padding: 30px 0px;
+    }
+  }
+}

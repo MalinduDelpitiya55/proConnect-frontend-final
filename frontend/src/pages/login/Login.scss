@@ -1,0 +1,101 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../../../public/img/sobbg.png");
+  .conbox {
+    border: 1px solid #dedede;
+    border-radius: 18px;
+    padding-right: 66px;
+    padding-left: 66px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.784);
+    background-color: #ffffffed;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    
+  }
+
+  .formlog{
+    padding-bottom: 25px;
+  }
+
+  .input1 {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    width: 85%;
+    height: 25px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.488);
+
+    &::placeholder {
+      color: #000000;
+    }
+
+    &:focus {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+
+  .invalid {
+    border: 2px solid red;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
+  form {
+    width: 360px;
+    padding: 100px 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h1 {
+      color: rgb(0, 0, 0);
+      margin-bottom: 20px;
+    }
+
+    label {
+      color: rgb(0, 0, 0);
+      font-size: 18px;
+    }
+
+    input,
+    textarea {
+      padding: 20px;
+    }
+
+    .buttonl {
+      border: none;
+      padding: 20px;
+      color: white;
+      font-weight: 500;
+      font-size: 18px;
+      background-color: #0c0091;
+      cursor: pointer;
+    }
+
+    span {
+      color: red;
+      font-size: 12px;
+    }
+  }
+}
+
+.buttonforgot {
+  border: none;
+  margin-bottom: 40px;
+  color: rgb(18, 0, 66);
+  background-color: #dedede00;
+  font-weight: 500;
+  font-size: 18px;
+  cursor: pointer;
+}

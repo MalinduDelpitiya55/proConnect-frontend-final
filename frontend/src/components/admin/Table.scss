@@ -1,0 +1,176 @@
+ 
+
+   body {
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hide-actions .actions-column {
+    display: none;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  
+    .buttongenerate, .buttondownload {
+      padding: 10px 15px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #010985;
+      color: white;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #00be5f;
+      }
+    }
+  }
+  
+  
+  .te {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #f8f9fa; // Light grey background for contrast
+  }
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .editp {
+    .cv-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+    }
+  
+    .profile-section,
+    .details-section {
+      flex: 1;
+      margin: 10px;
+    }
+  
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  
+    .name-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  
+    .contact-info {
+      list-style: none;
+      padding: 0;
+  
+      li {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #555;
+      }
+    }
+  
+    .titlep {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+  
+    .list-unstyled {
+      list-style: none;
+      padding: 0;
+  
+      li {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #333;
+      }
+    }
+  
+    .hrtagp {
+      border: none;
+      height: 1px;
+      background: #ddd;
+      margin: 10px 0;
+    }
+  }
+  
+  // buyers.scss
+  
+  .table-dark {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(3, 3, 3, 0.034);
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+  }
+  
+  .fw-bold {
+    font-weight: bold;
+  }
+  
+  .fw-normal {
+    font-weight: normal;
+  }
+  
+  .mb-1 {
+    margin-bottom: 0.25rem;
+  }
+  
+  .text-muted {
+    color: #004683 !important;
+  }
+  .rev{
+    font-size: 12px;
+  }
+  .tit{
+    font-size: 15px;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .align-items-center {
+    align-items: center;
+  }
+  
+  .rounded-circle {
+    border-radius: 50%;
+  }
+  
+  .ms-3 {
+    margin-left: 1rem;
+  }
