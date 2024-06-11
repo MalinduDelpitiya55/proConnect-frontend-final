@@ -21,10 +21,13 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8800/api/password/ResetPassword', {
-        token,
-        newPassword,
-      });
+      const response = await axios.post(
+        "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/password/ResetPassword",
+        {
+          token,
+          newPassword,
+        }
+      );
 
       if (response.data.status === 'success') {
         setMessage('Password reset successfully');

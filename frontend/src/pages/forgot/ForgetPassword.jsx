@@ -19,7 +19,10 @@ const ForgetPassword = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8800/api/password/forgetPassword', { email });
+      const response = await axios.post(
+        "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/password/forgetPassword",
+        {email}
+      );
       if (response.data.status === 'success') {
         setMessage('Password reset email sent successfully');
       } else {

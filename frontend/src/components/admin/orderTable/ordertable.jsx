@@ -16,7 +16,9 @@ const App = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.post(`http://localhost:8800/api/admin/getpayment`);
+      const response = await axios.post(
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/getpayment`
+      );
       const fetchedOrders = response.data; // Replace with actual data property name
       setOrders(fetchedOrders);
     } catch (error) {
@@ -27,7 +29,9 @@ const App = () => {
   const handleDelete = async (orderId) => {
     try {
       console.log(`${orderId}`);
-      await axios.post(`http://localhost:8800/api/admin/deletepayment/${orderId}`);
+      await axios.post(
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/deletepayment/${orderId}`
+      );
       await fetchOrders();
     } catch (error) {
       console.error("Error deleting order:", error);

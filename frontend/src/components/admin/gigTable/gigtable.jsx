@@ -27,7 +27,9 @@ export default function App() {
   const handleDelete = async (gigId) => {
     try {
       console.log(`${gigId}`);
-      await axios.post(`http://localhost:8800/api/admin/deleteGig/${gigId}`);
+      await axios.post(
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/deleteGig/${gigId}`
+      );
       await fetchGigs();
     } catch (error) {
       console.error("Error deleting gig:", error);

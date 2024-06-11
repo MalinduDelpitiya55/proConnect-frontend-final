@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Buyer from "./../../../../public/img/buyer.png";
 import Payment from "./../../../../public/img/payment.png";
@@ -41,10 +41,14 @@ const DashboardStats = () => {
   const fetchData = async () => {
     try {
       const [userCount, gigCount, paymentTotal] = await Promise.all([
-        axios.post("http://localhost:8800/api/admin/userCount"),
-        axios.post("http://localhost:8800/api/admin/getTotalGigCount"),
         axios.post(
-          "http://localhost:8800/api/admin/getTotalCompletedOrderPrices"
+          "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/userCount"
+        ),
+        axios.post(
+          "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/getTotalGigCount"
+        ),
+        axios.post(
+          "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/getTotalCompletedOrderPrices"
         ),
       ]);
       setCardData([

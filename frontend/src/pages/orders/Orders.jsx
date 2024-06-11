@@ -46,7 +46,7 @@ const Orders = () => {
     try {
       console.log(editingOrder._id);
       await axios.post(
-        `http://localhost:8800/api/orders/updateOrder/${editingOrder._id}`,
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/orders/updateOrder/${editingOrder._id}`,
         {
           orderId: editingOrder._id,
           requirements: editedRequirements,

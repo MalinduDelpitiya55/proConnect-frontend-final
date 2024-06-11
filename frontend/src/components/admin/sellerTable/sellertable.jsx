@@ -28,7 +28,9 @@ export default function App() {
   const handleDelete = async (sellerId) => {
     try {
       console.log(`Deleting seller with ID: ${sellerId}`);
-      await axios.post(`http://localhost:8800/api/admin/sellerDelete/${sellerId}`);
+      await axios.post(
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/sellerDelete/${sellerId}`
+      );
       await fetchSeller();
     } catch (error) {
       console.error("Error deleting seller:", error);

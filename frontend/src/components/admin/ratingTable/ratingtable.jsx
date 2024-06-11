@@ -28,7 +28,9 @@ export default function App() {
 
   const handleDelete = async (reviewId) => {
     try {
-      await axios.post(`http://localhost:8800/api/admin/ratingDelete/${reviewId}`);
+      await axios.post(
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/ratingDelete/${reviewId}`
+      );
       await fetchReviews();
     } catch (error) {
       console.error("Error deleting review:", error);
@@ -45,7 +47,10 @@ export default function App() {
 
   const handleSave = async (reviewId) => {
     try {
-      await axios.post(`http://localhost:8800/api/admin/ratingUpdate/${reviewId}`, editReviewData);
+      await axios.post(
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/ratingUpdate/${reviewId}`,
+        editReviewData
+      );
       setEditReviewId(null);
       setEditReviewData({});
       await fetchReviews();

@@ -71,8 +71,8 @@ const CVSection = () => {
     try {
       const currentUser = getCurrentUser();
       const response = await Axios.post(
-        `http://localhost:8800/api/seller/update/${currentUser._id}`,
-        { id: currentUser._id, data: formData }
+        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/seller/update/${currentUser._id}`,
+        {id: currentUser._id, data: formData}
       );
       setMessage("Edit is successful");
     } catch (error) {
