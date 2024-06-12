@@ -5,6 +5,7 @@ import {useQuery} from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import "bootstrap/dist/css/bootstrap.min.css";
 import img from "./../../../public/img/sobbg.png";
+import Profilepic from "./../../../public/img/noavatar.jpg";
 
 const GigCard = ({item}) => {
   const {isLoading, error, data} = useQuery({
@@ -23,8 +24,8 @@ const GigCard = ({item}) => {
         <div className="card-body">
           <div className="d-flex flex-row info">
             <div className="user">
-              <img src={data.img || img} alt="User" />
-              <span>{data.username || item.title}</span>
+              <img src={data.img || Profilepic} alt="User" />
+              <span>{data.username || "User Not Find"}</span>
             </div>
           </div>
           <div className="title">
