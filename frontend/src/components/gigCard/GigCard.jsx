@@ -14,7 +14,7 @@ const GigCard = ({ item }) => {
         return res.data;
       }),
   });
-  console.log(item);
+  console.log("data", data);
   return (
     // <Link to={`/gig/${item._id}`} className="link">
     //   <div className="gigCard">
@@ -55,7 +55,7 @@ const GigCard = ({ item }) => {
         <div class="card-body">
           <div className="d-flex flex-row info">
             <div className="user">
-              <img src={data.img || img} alt="" />
+              <img src={item.img || img} alt="" />
               <span>{data.username}</span>
             </div>
           </div>
