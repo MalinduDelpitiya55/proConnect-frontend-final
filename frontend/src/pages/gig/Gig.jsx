@@ -1,29 +1,31 @@
-import React, {useState} from "react";
+// Gig.js
+
+import React, { useState } from "react";
 import PopupForm from "../../components/PopupForm/PopupForm";
 import "./Gig.scss";
-import AwesomeSlider from "react-awesome-slider";
-import "react-awesome-slider/dist/styles.css";
-import {useParams, useNavigate} from "react-router-dom";
-import {useQuery} from "@tanstack/react-query";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 import Greencheck from "../../../public/img/greencheck.png";
 import Recycle from "../../../public/img/recycle.png";
 import Clock from "../../../public/img/clock.png";
 import Noavatar from "../../../public/img/noavatar.jpg";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function Gig() {
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
   const [showPopupForm, setShowPopupForm] = useState(false);
   const [formData, setFormData] = useState(null);
 
   const handlePopupFormSubmit = (data) => {
     setFormData(data);
-    navigate(`/pay/${id}`, {state: {formData: data, gigId: id}});
+    navigate(`/pay/${id}`, { state: { formData: data, gigId: id } });
   };
 
-  const {isLoading, error, data} = useQuery({
+  const { isLoading, error, data } = useQuery({
     queryKey: ["gig"],
     queryFn: () =>
       newRequest.get(`/gigs/single/${id}`).then((res) => {
@@ -55,11 +57,47 @@ function Gig() {
       ) : (
         <div className="container">
           <div className="left">
-            <AwesomeSlider className="slider">
-              {data.images.map((img) => (
-                <div key={img} data-src={img} />
-              ))}
-            </AwesomeSlider>
+            <div
+              id="carouselExampleInterval"
+              className="carousel slide"
+              data-bs-ride="carousel"
+            >
+              <div className="carousel-inner">
+                {data.images.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`carousel-item ${
+                      index === 0 ? "active" : ""
+                    }`}
+                    data-bs-interval={index === 0 ? "10000" : "10000"}
+                  >
+                    <img
+                      src={img}
+                      className="d-block w-100 bordered-img" // Add a CSS class for styling
+                      alt="..."
+                    />
+                  </div>
+                ))}
+              </div>
+              <button
+                className="carousel-control-prev"
+                type="button"
+                data-bs-target="#carouselExampleInterval"
+                data-bs-slide="prev"
+              >
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Previous</span>
+              </button>
+              <button
+                className="carousel-control-next"
+                type="button"
+                data-bs-target="#carouselExampleInterval"
+                data-bs-slide="next"
+              >
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Next</span>
+              </button>
+            </div>
             <h2>About This Gig</h2>
             <p className="pt">{data.desc}</p>
             {isLoadingUser ? (

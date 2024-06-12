@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./Gigs.scss";
 import GigCard from "../../components/gigCard/GigCard";
-import { useQuery } from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 function Gigs() {
   const [sort, setSort] = useState("sales");
@@ -11,9 +11,9 @@ function Gigs() {
   const minRef = useRef();
   const maxRef = useRef();
 
-  const { search } = useLocation();
+  const {search} = useLocation();
 
-  const { isLoading, error, data, refetch } = useQuery({
+  const {isLoading, error, data, refetch} = useQuery({
     queryKey: ["gigs"],
     queryFn: () =>
       newRequest
@@ -46,8 +46,7 @@ function Gigs() {
         <span className="breadcrumbs">Liverr Graphics & Design </span>
         <h1>AI Artists</h1>
         <p>
-          Explore the boundaries of art and technology with Liverr`&apos;`s AI
-          artists
+          Explore the boundaries of art and technology with Liverr's AI artists
         </p>
         <div className="menu">
           <div className="left">
@@ -79,7 +78,9 @@ function Gigs() {
             ? "loading"
             : error
             ? "Something went wrong!"
-            : data.map((gig) => <GigCard key={gig._id} item={gig} />)}
+            : data && data.length > 0
+            ? data.map((gig) => <GigCard key={gig._id} item={gig} />)
+            : "No gigs found."}
         </div>
       </div>
     </div>
