@@ -15,7 +15,7 @@ const GigCard = ({item}) => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
- console.log("item", item);
+
   return (
     <Link to={`/gig/${item._id}`} className="link">
       <div className="card gigCard">
@@ -23,8 +23,8 @@ const GigCard = ({item}) => {
         <div className="card-body">
           <div className="d-flex flex-row info">
             <div className="user">
-              <img src={item.img || img} alt="User" />
-              <span>{item.username || item.title}</span>
+              <img src={data.img || img} alt="User" />
+              <span>{data.username || item.title}</span>
             </div>
           </div>
           <div className="title">
