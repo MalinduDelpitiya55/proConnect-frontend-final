@@ -1,34 +1,35 @@
-import React, { useEffect, useState } from "react";
+// Import necessary libraries and components
+import React, {useEffect, useState} from "react";
 import {
   PaymentElement,
   LinkAuthenticationElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import "./CheckoutForm.scss";
+import "./CheckoutForm.scss"; // Custom styles for the form
 
+// Define the main component
 const CheckoutForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
+  const stripe = useStripe(); // Stripe hook for managing Stripe instance
+  const elements = useElements(); // Stripe hook for managing Elements instance
 
+  // State variables
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // useEffect hook to handle payment intent retrieval on component mount
   useEffect(() => {
-    if (!stripe) {
-      return;
-    }
+    if (!stripe) return; // Exit if Stripe has not loaded
 
     const clientSecret = new URLSearchParams(window.location.search).get(
       "payment_intent_client_secret"
     );
 
-    if (!clientSecret) {
-      return;
-    }
+    if (!clientSecret) return; // Exit if no client secret is found
 
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+    // Retrieve payment intent to check its status
+    stripe.retrievePaymentIntent(clientSecret).then(({paymentIntent}) => {
       switch (paymentIntent.status) {
         case "succeeded":
           setMessage("Payment succeeded!");
@@ -46,61 +47,65 @@ const CheckoutForm = () => {
     });
   }, [stripe]);
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
+    if (!stripe || !elements) return; // Exit if Stripe or Elements have not loaded
 
-    setIsLoading(true);
+    setIsLoading(true); // Set loading state
 
-    const { error } = await stripe.confirmPayment({
+    // Confirm payment with Stripe
+    const {error} = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: "http://localhost:5173/success",
+        return_url: "http://localhost:5173/success", // URL to redirect to upon payment completion
       },
     });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
-    } else {
-      setMessage("An unexpected error occurred.");
+    // Handle errors from payment confirmation
+    if (error) {
+      if (error.type === "card_error" || error.type === "validation_error") {
+        setMessage(error.message); // Set error message
+      } else {
+        setMessage("An unexpected error occurred."); // Set general error message
+      }
     }
 
-    setIsLoading(false);
+    setIsLoading(false); // Reset loading state
   };
 
+  // Options for the PaymentElement
   const paymentElementOptions = {
-    layout: "tabs",
+    layout: "tabs", // Use tabs layout for PaymentElement
   };
 
+  // Render the component
   return (
     <div className="payment">
-      
-    <form id="payment-form" onSubmit={handleSubmit}>
-    <center><h1 className="titlep">Payment</h1></center><br/>
-      <LinkAuthenticationElement
-        id="link-authentication-element"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
-      </button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
-    </form>
+      <form id="payment-form" onSubmit={handleSubmit}>
+        <center>
+          <h1 className="titlep">Payment</h1>
+        </center>
+        <br />
+        <LinkAuthenticationElement
+          id="link-authentication-element"
+          onChange={(e) => setEmail(e.target.value)} // Handle email input change
+        />
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        <button disabled={isLoading || !stripe || !elements} id="submit">
+          <span id="button-text">
+            {isLoading ? (
+              <div className="spinner" id="spinner"></div>
+            ) : (
+              "Pay now"
+            )}{" "}
+            {/* Show spinner if loading */}
+          </span>
+        </button>
+        {message && <div id="payment-message">{message}</div>}{" "}
+        {/* Show message if exists */}
+      </form>
     </div>
   );
 };

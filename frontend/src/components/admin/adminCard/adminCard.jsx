@@ -5,7 +5,7 @@ import Payment from "./../../../../public/img/payment.png";
 import Post from "./../../../../public/img/post.png";
 import Seller from "./../../../../public/img/seller.png";
 import "./adminCard.scss";
-
+import newRequest from "../../utils/newRequest";
 const DashboardStats = () => {
   const [cardData, setCardData] = useState([
     {
@@ -41,15 +41,9 @@ const DashboardStats = () => {
   const fetchData = async () => {
     try {
       const [userCount, gigCount, paymentTotal] = await Promise.all([
-        axios.post(
-          "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/userCount"
-        ),
-        axios.post(
-          "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/getTotalGigCount"
-        ),
-        axios.post(
-          "https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/getTotalCompletedOrderPrices"
-        ),
+        newRequest.post("/admin/userCount"),
+        newRequest.post("/admin/getTotalGigCount"),
+        newRequest.post("/admin/getTotalCompletedOrderPrices"),
       ]);
       setCardData([
         {

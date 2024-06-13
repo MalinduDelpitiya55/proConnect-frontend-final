@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
+import React, {useState, useEffect} from "react";
+import {MDBTable, MDBTableHead, MDBTableBody} from "mdb-react-ui-kit";
 import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./../button.scss";
 import "../Table.scss";
-
+import newRequest from "./../../../utils/newRequest.js";
 const App = () => {
   const [orders, setOrders] = useState([]);
   const [searchUsername, setSearchUsername] = useState("");
@@ -16,9 +16,7 @@ const App = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.post(
-        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/getpayment`
-      );
+      const response = await newRequest.post(`/admin/getpayment`);
       const fetchedOrders = response.data; // Replace with actual data property name
       setOrders(fetchedOrders);
     } catch (error) {
@@ -29,9 +27,7 @@ const App = () => {
   const handleDelete = async (orderId) => {
     try {
       console.log(`${orderId}`);
-      await axios.post(
-        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/admin/deletepayment/${orderId}`
-      );
+      await newRequest.post(`/admin/deletepayment/${orderId}`);
       await fetchOrders();
     } catch (error) {
       console.error("Error deleting order:", error);
@@ -39,19 +35,22 @@ const App = () => {
   };
 
   const generatePDF = async () => {
-    const orderTable = document.getElementById('orderTable');
-    orderTable.classList.add('hide-actions'); // Add class to hide actions column
+    const orderTable = document.getElementById("orderTable");
+    orderTable.classList.add("hide-actions"); // Add class to hide actions column
 
-    const canvas = await html2canvas(orderTable, { allowTaint: true, useCORS: true });
-    const imgData = canvas.toDataURL('image/png');
+    const canvas = await html2canvas(orderTable, {
+      allowTaint: true,
+      useCORS: true,
+    });
+    const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF();
     const imgProps = pdf.getImageProperties(imgData);
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save("orders.pdf");
 
-    orderTable.classList.remove('hide-actions'); // Remove class to restore actions column
+    orderTable.classList.remove("hide-actions"); // Remove class to restore actions column
   };
 
   const handleSearchUsernameChange = (event) => {
@@ -59,10 +58,16 @@ const App = () => {
   };
 
   const filteredOrders = orders
-    .filter((order) => order.buyer?.username.toLowerCase().includes(searchUsername.toLowerCase()))
+    .filter((order) =>
+      order.buyer?.username.toLowerCase().includes(searchUsername.toLowerCase())
+    )
     .sort((a, b) => {
-      const aStartsWith = a.buyer?.username.toLowerCase().startsWith(searchUsername.toLowerCase());
-      const bStartsWith = b.buyer?.username.toLowerCase().startsWith(searchUsername.toLowerCase());
+      const aStartsWith = a.buyer?.username
+        .toLowerCase()
+        .startsWith(searchUsername.toLowerCase());
+      const bStartsWith = b.buyer?.username
+        .toLowerCase()
+        .startsWith(searchUsername.toLowerCase());
 
       if (aStartsWith && !bStartsWith) {
         return -1;
@@ -96,11 +101,13 @@ const App = () => {
             <th scope="col">Gig Title</th>
             <th scope="col">Seller Name</th>
             <th scope="col">Buyer Name</th>
-            <th scope="col" className="actions-column">Actions</th>
+            <th scope="col" className="actions-column">
+              Actions
+            </th>
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          {filteredOrders.length > 0 && 
+          {filteredOrders.length > 0 &&
             filteredOrders.map((orderData, index) => (
               <tr key={index}>
                 <td>
@@ -111,7 +118,7 @@ const App = () => {
                     <img
                       src={orderData.gig.cover || "/default-gig-image.png"}
                       alt=""
-                      style={{ width: "45px", height: "45px" }}
+                      style={{width: "45px", height: "45px"}}
                       className="rounded-1"
                     />
                     <div className="ms-3">
@@ -124,12 +131,16 @@ const App = () => {
                     <img
                       src={orderData.seller?.img || "/default-avatar.png"}
                       alt=""
-                      style={{ width: "45px", height: "45px" }}
+                      style={{width: "45px", height: "45px"}}
                       className="rounded-circle"
                     />
                     <div className="ms-3">
-                      <p className="fw-bold mb-1">{orderData.seller?.username || "N/A"}</p>
-                      <p className="text-muted mb-0">{orderData.seller?.email || "N/A"}</p>
+                      <p className="fw-bold mb-1">
+                        {orderData.seller?.username || "N/A"}
+                      </p>
+                      <p className="text-muted mb-0">
+                        {orderData.seller?.email || "N/A"}
+                      </p>
                     </div>
                   </div>
                 </td>
@@ -138,12 +149,16 @@ const App = () => {
                     <img
                       src={orderData.buyer?.img || "/default-avatar.png"}
                       alt=""
-                      style={{ width: "45px", height: "45px" }}
+                      style={{width: "45px", height: "45px"}}
                       className="rounded-circle"
                     />
                     <div className="ms-3">
-                      <p className="fw-bold mb-1">{orderData.buyer?.username || "N/A"}</p>
-                      <p className="text-muted mb-0">{orderData.buyer?.email || "N/A"}</p>
+                      <p className="fw-bold mb-1">
+                        {orderData.buyer?.username || "N/A"}
+                      </p>
+                      <p className="text-muted mb-0">
+                        {orderData.buyer?.email || "N/A"}
+                      </p>
                     </div>
                   </div>
                 </td>

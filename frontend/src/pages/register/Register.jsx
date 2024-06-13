@@ -1,47 +1,53 @@
-import React, { useState } from "react";
-import upload from "../../utils/upload";
+import React, {useState} from "react";
+import upload from "../../utils/upload"; // Assuming upload utility for file uploads
 import "./Register.scss";
-import newRequest from "../../utils/newRequest";
-import { useNavigate } from "react-router-dom";
+import newRequest from "../../utils/newRequest"; // Assuming Axios instance for API requests
+import {useNavigate} from "react-router-dom";
 
 function Register() {
-  const [file, setFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
+  // State variables for form inputs, validation, and submission status
+  const [file, setFile] = useState(null); // State for profile picture file
+  const [isUploading, setIsUploading] = useState(false); // State to track file upload status
   const [user, setUser] = useState({
+    // State for user data
     username: "",
     email: "",
     password: "",
-    img: "",
+    img: "", // Placeholder for profile picture URL
     country: "",
     isSeller: false,
     desc: "",
     phone: "",
   });
-  const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [error, setError] = useState(""); // State for general error messages
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission status
+  const [errors, setErrors] = useState({}); // State to hold validation errors for form fields
+  const navigate = useNavigate(); // Hook from react-router-dom for navigation
 
+  // Function to handle input changes and perform validation
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     let newValue = value;
 
+    // Additional logic for specific fields (e.g., username and password length limits)
     if (name === "username") {
       newValue = value.slice(0, 16);
     }
-
     if (name === "password") {
       newValue = value.slice(0, 32);
     }
 
+    // Update user state with new values
     setUser((prev) => ({
       ...prev,
       [name]: newValue,
     }));
 
+    // Validate the updated field
     validate(name, newValue);
   };
 
+  // Function to handle seller checkbox change
   const handleSeller = (e) => {
     setUser((prev) => ({
       ...prev,
@@ -49,6 +55,7 @@ function Register() {
     }));
   };
 
+  // Function to perform field validation based on name and value
   const validate = (name, value) => {
     let errorMsg = "";
 
@@ -67,7 +74,8 @@ function Register() {
         break;
       case "password":
         if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/.test(value)) {
-          errorMsg = "Password must be at least 8 characters long and include at least one number, one uppercase letter, one lowercase letter, and one special character.";
+          errorMsg =
+            "Password must be at least 8 characters long and include at least one number, one uppercase letter, one lowercase letter, and one special character.";
         }
         break;
       case "phone":
@@ -79,52 +87,62 @@ function Register() {
         break;
     }
 
+    // Update errors state with validation error message
     setErrors((prev) => ({
       ...prev,
       [name]: errorMsg,
     }));
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setIsSubmitting(true);
+    e.preventDefault(); // Prevent default form submission behavior
+    setError(""); // Clear any previous errors
+    setIsSubmitting(true); // Set submitting state to true
 
-    let url = "";
+    let url = ""; // Placeholder for profile picture URL
 
+    // Upload profile picture if file is selected
     if (file) {
-      setIsUploading(true);
+      setIsUploading(true); // Set uploading state to true
       try {
+        // Use upload utility function to upload file
         url = await upload(file);
       } catch (err) {
-        setError("Failed to upload image.");
-        setIsUploading(false);
-        setIsSubmitting(false);
-        alert("Failed to upload image.");
+        setError("Failed to upload image."); // Handle upload error
+        setIsUploading(false); // Reset uploading state
+        setIsSubmitting(false); // Reset submitting state
+        alert("Failed to upload image."); // Show alert for upload failure
         return;
       }
-      setIsUploading(false);
+      setIsUploading(false); // Reset uploading state after successful upload
     }
 
     try {
+      // Send registration data to server using newRequest instance
       await newRequest.post("/auth/register", {
         ...user,
-        img: url,
+        img: url, // Include uploaded image URL in user data
       });
-      navigate("/");
+      alert("Registration successful"); // Show success message
+      navigate("/login"); // Navigate to login page
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError("Registration failed. Please try again."); // Handle registration failure
+      alert("Registration failed. Please try again."); // Show alert for registration failure
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Reset submitting state
     }
   };
 
+  // JSX rendering of registration form
   return (
     <div className="register">
       <div className="conbox">
         <form onSubmit={handleSubmit}>
+          {/* Left section of the form */}
           <div className="left">
             <h1>Create a new account</h1>
+            {/* Username input */}
             <label htmlFor="username">Username</label>
             <input
               className="input1"
@@ -137,7 +155,7 @@ function Register() {
               required
             />
             {errors.username && <p className="error">{errors.username}</p>}
-
+            {/* Email input */}
             <label htmlFor="email">Email</label>
             <input
               className="input1"
@@ -149,7 +167,7 @@ function Register() {
               required
             />
             {errors.email && <p className="error">{errors.email}</p>}
-
+            {/* Password input */}
             <label htmlFor="password">Password</label>
             <input
               className="input1"
@@ -163,10 +181,10 @@ function Register() {
               required
             />
             {errors.password && <p className="error">{errors.password}</p>}
-
+            {/* File upload for profile picture */}
             <label htmlFor="img">Profile Picture</label>
             <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-
+            {/* Country input */}
             <label htmlFor="country">Country</label>
             <input
               className="input1"
@@ -177,17 +195,24 @@ function Register() {
               onChange={handleChange}
               required
             />
-
+            {/* Submit button */}
             <button
               type="submit"
-              disabled={isSubmitting || Object.keys(errors).some((key) => errors[key])}
+              disabled={
+                isSubmitting || Object.keys(errors).some((key) => errors[key]) // Disable button if submitting or there are validation errors
+              }
             >
               {isSubmitting ? "Registering..." : "Register"}
             </button>
-            {error && <p className="error">{error}</p>}
+            {error && <p className="error">{error}</p>}{" "}
+            {/* Error message display */}
           </div>
+
+          {/* Right section of the form */}
           <div className="right">
             <h1>I want to become a seller</h1>
+
+            {/* Seller activation toggle */}
             <div className="toggle">
               <label htmlFor="isSeller">Activate the seller account</label>
               <label className="switch">
@@ -196,6 +221,7 @@ function Register() {
               </label>
             </div>
 
+            {/* Phone number input */}
             <label htmlFor="phone">Phone Number</label>
             <input
               className="input1"
@@ -209,6 +235,7 @@ function Register() {
             />
             {errors.phone && <p className="error">{errors.phone}</p>}
 
+            {/* Description textarea */}
             <label htmlFor="desc">Description</label>
             <textarea
               className="input2"
