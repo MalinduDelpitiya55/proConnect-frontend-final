@@ -34,9 +34,8 @@ console.log(catValue);
     setOpen(false);
   };
   useEffect(() => {
-    
     refetch();
-  }, [sort]);
+  }, [sort, catValue]);
 
   const apply = () => {
     refetch();

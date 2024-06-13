@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
+import Rating from "@mui/material/Rating";
 import newRequest from "../../utils/newRequest";
 import Review from "../review/Review";
 import "./Reviews.scss";
 const Reviews = ({ gigId }) => {
-
+const [value, setValue] = React.useState(2);
   const queryClient = useQueryClient()
   const { isLoading, error, data } = useQuery({
     queryKey: ["reviews"],
@@ -42,14 +43,14 @@ const Reviews = ({ gigId }) => {
         <h3>Add a review</h3>
         <form action="" className="addForm" onSubmit={handleSubmit}>
           <input type="text" placeholder="write your opinion" />
-          
-          <select name="" id="">
-            <option value={1}>1</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
-            <option value={4}>4</option>
-            <option value={5}>5</option>
-          </select>
+
+          <Rating
+            name="simple-controlled"
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
+          />
           <button>Send</button>
         </form>
       </div>
