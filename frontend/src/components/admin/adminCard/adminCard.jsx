@@ -5,7 +5,7 @@ import Payment from "./../../../../public/img/payment.png";
 import Post from "./../../../../public/img/post.png";
 import Seller from "./../../../../public/img/seller.png";
 import "./adminCard.scss";
-import newRequest from "../../utils/newRequest";
+import newRequest from "../../../utils/newRequest";
 const DashboardStats = () => {
   const [cardData, setCardData] = useState([
     {
