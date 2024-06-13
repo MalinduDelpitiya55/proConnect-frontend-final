@@ -33,8 +33,6 @@ console.log(catValue);
     setSort(type);
     setOpen(false);
   };
-const catagory = res.param("cat");
-console.log(catagory);
   useEffect(() => {
     
     refetch();
