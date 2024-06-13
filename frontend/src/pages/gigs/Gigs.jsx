@@ -45,8 +45,8 @@ console.log(catValue);
   return (
     <div className="gigs">
       <div className="container">
-        <h1>{catValue}</h1>
-<br />
+        <h1>{catValue || "All Gigs"}</h1>
+        <br />
         <div className="menu">
           <div className="left">
             <span>Budget</span>
