@@ -12,7 +12,9 @@ function Gigs() {
   const maxRef = useRef();
 
   const {search} = useLocation();
-
+  const params = new URLSearchParams(window.location.search);
+  const catValue = params.get("cat");
+console.log(catValue);
   const {isLoading, error, data, refetch} = useQuery({
     queryKey: ["gigs"],
     queryFn: () =>
@@ -31,8 +33,10 @@ function Gigs() {
     setSort(type);
     setOpen(false);
   };
-
+const catagory = res.param("cat");
+console.log(catagory);
   useEffect(() => {
+    
     refetch();
   }, [sort]);
 
@@ -43,11 +47,8 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-        <span className="breadcrumbs">Liverr Graphics & Design </span>
-        <h1>AI Artists</h1>
-        <p>
-          Explore the boundaries of art and technology with Liverr's AI artists
-        </p>
+        <h1>{catValue}</h1>
+<br />
         <div className="menu">
           <div className="left">
             <span>Budget</span>
@@ -73,6 +74,7 @@ function Gigs() {
             )}
           </div>
         </div>
+        <br />
         <div className="cards">
           {isLoading
             ? "loading"
