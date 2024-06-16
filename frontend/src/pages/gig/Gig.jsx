@@ -1,10 +1,7 @@
-// Gig.js
-
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import PopupForm from "../../components/PopupForm/PopupForm";
 import "./Gig.scss";
-import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import {useParams, useNavigate} from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 import Greencheck from "../../../public/img/greencheck.png";
@@ -15,45 +12,62 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function Gig() {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [showPopupForm, setShowPopupForm] = useState(false);
-  const [formData, setFormData] = useState(null);
+  const navigate = useNavigate(); // Hook to programmatically navigate
+  const {id} = useParams(); // Get the 'id' parameter from the URL
+  const [showPopupForm, setShowPopupForm] = useState(false); // State to manage the visibility of the popup form
+  const [formData, setFormData] = useState(null); // State to store form data
+  const [gigData, setGigData] = useState(null); // State to store fetched gig data
+  const [userData, setUserData] = useState(null); // State to store fetched user data
+  const [loadingGig, setLoadingGig] = useState(true); // State to manage loading status for gig data
+  const [loadingUser, setLoadingUser] = useState(true); // State to manage loading status for user data
+  const [errorGig, setErrorGig] = useState(null); // State to store error message for gig data
+  const [errorUser, setErrorUser] = useState(null); // State to store error message for user data
 
   const handlePopupFormSubmit = (data) => {
-    setFormData(data);
-    navigate(`/pay/${id}`, { state: { formData: data, gigId: id } });
+    setFormData(data); // Store the form data
+    navigate(`/pay/${id}`, {state: {formData: data, gigId: id}}); // Navigate to the payment page with the form data and gig ID
   };
 
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["gig"],
-    queryFn: () =>
-      newRequest.get(`/gigs/single/${id}`).then((res) => {
-        return res.data;
-      }),
-  });
+  // Fetch gig data when component mounts or 'id' changes
+  useEffect(() => {
+    const fetchGig = async () => {
+      try {
+        const response = await newRequest.get(`/gigs/single/${id}`); // Fetch gig data from the API
+        setGigData(response.data); // Store the fetched data in state
+      } catch (error) {
+        setErrorGig("Something went wrong!"); // Set error message if there's an error
+      } finally {
+        setLoadingGig(false); // Set loading to false when the fetch completes
+      }
+    };
 
-  const userId = data?.userId;
+    fetchGig(); // Call the fetch function
+  }, [id]); // Dependency array ensures this runs when 'id' changes
 
-  const {
-    isLoading: isLoadingUser,
-    error: errorUser,
-    data: dataUser,
-  } = useQuery({
-    queryKey: ["user"],
-    queryFn: () =>
-      newRequest.get(`/users/${userId}`).then((res) => {
-        return res.data;
-      }),
-    enabled: !!userId,
-  });
+  // Fetch user data when gigData.userId is available
+  useEffect(() => {
+    if (!gigData?.userId) return; // If no userId, exit early
+
+    const fetchUser = async () => {
+      try {
+        const response = await newRequest.get(`/users/${gigData.userId}`); // Fetch user data from the API
+        setUserData(response.data); // Store the fetched data in state
+      } catch (error) {
+        setErrorUser("Something went wrong!"); // Set error message if there's an error
+      } finally {
+        setLoadingUser(false); // Set loading to false when the fetch completes
+      }
+    };
+
+    fetchUser(); // Call the fetch function
+  }, [gigData]); // Dependency array ensures this runs when 'gigData' changes
 
   return (
     <div className="gig">
-      {isLoading ? (
+      {loadingGig ? ( // If gig data is loading, show loading text
         "loading"
-      ) : error ? (
-        "Something went wrong!"
+      ) : errorGig ? ( // If there's an error, show error message
+        errorGig
       ) : (
         <div className="container">
           <div className="left">
@@ -63,13 +77,11 @@ function Gig() {
               data-bs-ride="carousel"
             >
               <div className="carousel-inner">
-                {data.images.map((img, index) => (
+                {gigData.images.map((img, index) => (
                   <div
                     key={index}
-                    className={`carousel-item ${
-                      index === 0 ? "active" : ""
-                    }`}
-                    data-bs-interval={index === 0 ? "10000" : "10000"}
+                    className={`carousel-item ${index === 0 ? "active" : ""}`} // Set the first image as active
+                    data-bs-interval="10000"
                   >
                     <img
                       src={img}
@@ -85,7 +97,10 @@ function Gig() {
                 data-bs-target="#carouselExampleInterval"
                 data-bs-slide="prev"
               >
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span
+                  className="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
                 <span className="visually-hidden">Previous</span>
               </button>
               <button
@@ -94,23 +109,26 @@ function Gig() {
                 data-bs-target="#carouselExampleInterval"
                 data-bs-slide="next"
               >
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span
+                  className="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
                 <span className="visually-hidden">Next</span>
               </button>
             </div>
             <h2>About This Gig</h2>
-            <p className="pt">{data.desc}</p>
-            {isLoadingUser ? (
+            <p className="pt">{gigData.desc}</p>
+            {loadingUser ? ( // If user data is loading, show loading text
               "loading"
-            ) : errorUser ? (
-              "Something went wrong!"
+            ) : errorUser ? ( // If there's an error, show error message
+              errorUser
             ) : (
               <div className="seller">
                 <h2>About The Seller</h2>
                 <div className="user">
-                  <img src={dataUser.img || Noavatar} alt="" />
+                  <img src={userData.img || Noavatar} alt="" />
                   <div className="info">
-                    <span>{dataUser.username}</span>
+                    <span>{userData.username}</span>
                     <button>View</button>
                   </div>
                 </div>
@@ -118,7 +136,7 @@ function Gig() {
                   <div className="items">
                     <div className="item">
                       <span className="title">From</span>
-                      <span className="desc">{dataUser.country}</span>
+                      <span className="desc">{userData.country}</span>
                     </div>
                     <div className="item">
                       <span className="title">Member since</span>
@@ -134,30 +152,30 @@ function Gig() {
                     </div>
                   </div>
                   <hr />
-                  <p className="pt">{dataUser.desc}</p>
+                  <p className="pt">{userData.desc}</p>
                 </div>
               </div>
             )}
-            <Reviews gigId={id} />
+            <Reviews gigId={id} /> {/* Render reviews component */}
           </div>
           <div className="right">
             <div className="price">
-              <h3>{data.shortTitle}</h3>
-              <h2>$ {data.price}</h2>
+              <h3>{gigData.shortTitle}</h3>
+              <h2>$ {gigData.price}</h2>
             </div>
-            <p className="pt">{data.shortDesc}</p>
+            <p className="pt">{gigData.shortDesc}</p>
             <div className="details">
               <div className="item">
                 <img src={Clock} alt="" />
-                <span>{data.deliveryTime} Days Delivery</span>
+                <span>{gigData.deliveryTime} Days Delivery</span>
               </div>
               <div className="item">
                 <img src={Recycle} alt="" />
-                <span>{data.revisionNumber} Revisions</span>
+                <span>{gigData.revisionNumber} Revisions</span>
               </div>
             </div>
             <div className="features">
-              {data.features.map((feature) => (
+              {gigData.features.map((feature) => (
                 <div className="item" key={feature}>
                   <img src={Greencheck} alt="" />
                   <span>{feature}</span>
@@ -165,7 +183,10 @@ function Gig() {
               ))}
             </div>
             <button onClick={() => setShowPopupForm(true)}>Continue</button>
-            {showPopupForm && <PopupForm onSubmit={handlePopupFormSubmit} />}
+            {showPopupForm && (
+              <PopupForm onSubmit={handlePopupFormSubmit} />
+            )}{" "}
+            {/* Show popup form if showPopupForm is true */}
           </div>
         </div>
       )}

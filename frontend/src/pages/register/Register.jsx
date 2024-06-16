@@ -1,10 +1,19 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import upload from "../../utils/upload"; // Assuming upload utility for file uploads
 import "./Register.scss";
 import newRequest from "../../utils/newRequest"; // Assuming Axios instance for API requests
 import {useNavigate} from "react-router-dom";
-
+import getCurrentUser from "./../../utils/getCurrentUser.js";
 function Register() {
+  const navigate = useNavigate(); // Hook from react-router-dom for navigation
+  useEffect(() => {
+    const user = getCurrentUser(); // Function to get token from cookies
+   console.log(user);
+    // If token exists, navigate away from login page
+    if (user!=null) {
+     return navigate("/"); // Redirect to home page or dashboard
+    }
+  }, [navigate]);
   // State variables for form inputs, validation, and submission status
   const [file, setFile] = useState(null); // State for profile picture file
   const [isUploading, setIsUploading] = useState(false); // State to track file upload status
@@ -22,7 +31,6 @@ function Register() {
   const [error, setError] = useState(""); // State for general error messages
   const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission status
   const [errors, setErrors] = useState({}); // State to hold validation errors for form fields
-  const navigate = useNavigate(); // Hook from react-router-dom for navigation
 
   // Function to handle input changes and perform validation
   const handleChange = (e) => {

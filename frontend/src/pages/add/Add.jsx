@@ -6,18 +6,43 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
 
+// Function to get the token from cookies
+const getTokenFromCookies = () => {
+  const name = "accessToken=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+};
+
 const Add = () => {
+  // State to handle single file upload
   const [singleFile, setSingleFile] = useState(undefined);
+  // State to handle multiple files upload
   const [files, setFiles] = useState([]);
+  // State to handle uploading status
   const [uploading, setUploading] = useState(false);
+  // Regex for validating inputs
   const validInputRegex = /^[a-zA-Z0-9 .']*/;
+  // Reducer for managing gig state
   const [state, dispatch] = useReducer(gigReducer, INITIAL_STATE);
+  // State for handling input errors
   const [errors, setErrors] = useState({});
 
+  // Function to handle input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     let error = "";
 
+    // Validate input based on the field name
     if (name === "title" && value.length > 100) {
       error = "Title must be between 10 and 100 characters";
     } else if (name === "shortTitle" && value.length > 30) {
@@ -30,21 +55,23 @@ const Add = () => {
       error = "Price must be at least 5";
     }
 
+    // Update errors state
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: error,
     }));
 
-    // Check if the input value matches the allowed pattern
+    // Check if the input value matches the allowed pattern and no error
     if (validInputRegex.test(value) && !error) {
-      // Update state if the input is valid
+      // Dispatch the change input action to the reducer
       dispatch({
         type: "CHANGE_INPUT",
-        payload: { name, value },
+        payload: {name, value},
       });
     }
   };
 
+  // Function to handle adding a feature
   const handleFeature = (e) => {
     e.preventDefault();
     dispatch({
@@ -54,11 +81,13 @@ const Add = () => {
     e.target[0].value = "";
   };
 
+  // Function to handle file uploads
   const handleUpload = async () => {
     setUploading(true);
     try {
       const cover = await upload(singleFile);
 
+      // Check for maximum file upload limit
       if (files.length > 5) {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -75,21 +104,31 @@ const Add = () => {
         })
       );
       setUploading(false);
-      dispatch({ type: "ADD_IMAGES", payload: { cover, images } });
+      dispatch({type: "ADD_IMAGES", payload: {cover, images}});
     } catch (err) {
       console.log(err);
     }
   };
 
+  // Navigation hook for redirecting
   const navigate = useNavigate();
 
+  // React Query client
   const queryClient = useQueryClient();
 
+  // Mutation for creating a new gig
   const mutation = useMutation({
     mutationFn: (gig) => {
-      return newRequest.post("/gigs", gig);
+      // Add the Authorization header with the token
+      const token = getTokenFromCookies();
+      return newRequest.post("/gigs", gig, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     },
     onSuccess: () => {
+      // Invalidate queries to refetch data
       queryClient.invalidateQueries(["myGigs"]);
       navigate("/mygigs");
     },
@@ -98,6 +137,7 @@ const Add = () => {
     },
   });
 
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     mutation.mutate(state);
@@ -127,12 +167,12 @@ const Add = () => {
             >
               <option value="Graphics Design">Graphics Design</option>
               <option value="Video Design">Video Design</option>
-              <option value=" Web Design"> Web Design</option>
-              <option value="Mobile Application Desing">
-                Mobile Application Desing
+              <option value="Web Design">Web Design</option>
+              <option value="Mobile Application Design">
+                Mobile Application Design
               </option>
-              <option value="Animation Designo">Animation Design</option>
-              <option value="ai">AI Services</option>
+              <option value="Animation Design">Animation Design</option>
+              <option value="AI Services">AI Services</option>
               <option value="Writing & Translation">
                 Writing & Translation
               </option>
@@ -154,9 +194,8 @@ const Add = () => {
                 />
               </div>
               <button onClick={handleUpload}>
-                {uploading ? "uploading" : "Upload"}
+                {uploading ? "Uploading" : "Upload"}
               </button>
-             
             </div>
             {errors.files && <p className="error">{errors.files}</p>}
             <label htmlFor="">Description</label>
@@ -200,7 +239,9 @@ const Add = () => {
               onChange={handleChange}
               value={state.deliveryTime}
             />
-            {errors.deliveryTime && <p className="error">{errors.deliveryTime}</p>}
+            {errors.deliveryTime && (
+              <p className="error">{errors.deliveryTime}</p>
+            )}
             <label htmlFor="">Revision Number</label>
             <input
               type="number"
@@ -210,7 +251,9 @@ const Add = () => {
               onChange={handleChange}
               value={state.revisionNumber}
             />
-            {errors.revisionNumber && <p className="error">{errors.revisionNumber}</p>}
+            {errors.revisionNumber && (
+              <p className="error">{errors.revisionNumber}</p>
+            )}
             <label htmlFor="">Add Features</label>
             <form action="" className="add" onSubmit={handleFeature}>
               <input
@@ -225,14 +268,14 @@ const Add = () => {
                   });
                 }}
               />
-              <button type="submit">add</button>
+              <button type="submit">Add</button>
             </form>
             <div className="addedFeatures">
               {state?.features?.map((f) => (
                 <div className="item" key={f}>
                   <button
                     onClick={() =>
-                      dispatch({ type: "REMOVE_FEATURE", payload: f })
+                      dispatch({type: "REMOVE_FEATURE", payload: f})
                     }
                   >
                     {f}

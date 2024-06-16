@@ -21,12 +21,7 @@ import Forgot from "./pages/forgot/ForgetPassword.jsx";
 import Reset from "./pages/forgot/ResetPassword.jsx";
 
 import AdminDashboard from "./pages/admin/admindashboard/admindashboard.jsx";
-import Adminseller from "./pages/admin/adminseller/adminseller.jsx";
-import AdminBuyer from "./pages/admin/adminBuyer/adminbuyer.jsx";
-import AdminGigs from "./pages/admin/admingigs/admingigs.jsx";
-import Adminrating from "./pages/admin/adminrating/adminrating.jsx";
-import AdminOrder from "./pages/admin/adminorder/adminorder.jsx";
-import AdminPayment from "./pages/admin/adminpayment/adminpayment.jsx";
+
 
 function App() {
   const queryClient = new QueryClient();
@@ -117,31 +112,6 @@ function App() {
           element: <Reset />,
         },
       ],
-    },
-    {
-      path: "/adminseller",
-      element: <Adminseller />,
-    },
-    {
-      path: "/adminbuyer",
-      element: <AdminBuyer />,
-    },
-    {
-      path: "/admingig",
-      element: <AdminGigs />,
-    },
-
-    {
-      path: "/adminrating",
-      element: <Adminrating />,
-    },
-    {
-      path: "/adminorder",
-      element: <AdminOrder />,
-    },
-    {
-      path: "/adminpayment",
-      element: <AdminPayment />,
     },
     {
       path: "/admindashboard",

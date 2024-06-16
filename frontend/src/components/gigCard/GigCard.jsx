@@ -3,8 +3,10 @@ import {Link} from "react-router-dom";
 import newRequest from "../../utils/newRequest"; // Importing Axios instance for API requests
 import "bootstrap/dist/css/bootstrap.min.css"; // Bootstrap CSS for styling
 import Profilepic from "./../../../public/img/noavatar.jpg"; // Placeholder image for user profile picture
+import './GigCard.scss'
 
-const GigCard = ({item}) => {
+const GigCard = ({ item }) => {
+
   // State to store user data, loading state, and error state
   const [userData, setUserData] = useState(null); // State for user data
   const [isLoading, setIsLoading] = useState(true); // Loading state
@@ -16,17 +18,20 @@ const GigCard = ({item}) => {
       try {
         // Fetch user data based on item.userId
         const response = await newRequest.get(`/users/${item.userId}`);
+        
+
         setUserData(response.data); // Set user data from API response
         setIsLoading(false); // Set loading state to false after data is fetched
       } catch (error) {
-        setError(error.message); // Set error state if there's an error during fetching
+        console.log(error);
+         // Set error state if there's an error during fetching
         setIsLoading(false); // Set loading state to false in case of error
       }
+      console.log(setUserData);
     };
-
     fetchUserData(); // Invoke the fetchUserData function
   }, [item.userId]); // useEffect dependency on item.userId
-
+console.log(item.totalStars);
   // Calculate the star rating based on item.totalStars and item.starNumber
   const rating = !isNaN(item.totalStars / item.starNumber)
     ? Math.round(item.totalStars / item.starNumber)

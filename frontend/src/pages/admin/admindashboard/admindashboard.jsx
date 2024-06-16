@@ -1,30 +1,31 @@
-import React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
+import React, {useEffect} from "react";
+import {styled, useTheme} from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import GradeIcon from "@mui/icons-material/Grade";
 import DvrIcon from "@mui/icons-material/Dvr";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import Badge from '@mui/material/Badge';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { Link, useNavigate } from 'react-router-dom';
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import Badge from "@mui/material/Badge";
+import LogoutIcon from "@mui/icons-material/Logout";
+import {Link, useNavigate} from "react-router-dom";
+import newRequest from "../../../utils/newRequest.js";
 
 import CSSGridG from "./../../../components/admin/gigprofile/gigProfile.jsx";
 import CSSGridB from "./../../../components/admin/buyerprofile/buyerprofile.jsx";
@@ -35,17 +36,13 @@ import CSSGridR from "./../../../components/admin/ratingProfile/ratingprofile.js
 
 const drawerWidth = 240;
 
-const handleLogout = () => {
-  // logout(navigation);
-};
-
 const openedMixin = (theme) => ({
   width: drawerWidth,
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
 });
 
 const closedMixin = (theme) => ({
@@ -60,17 +57,17 @@ const closedMixin = (theme) => ({
   },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
+const DrawerHeader = styled("div")(({theme}) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
 }));
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({theme, open}) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
@@ -86,28 +83,39 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({theme, open}) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [activeComponent, setActiveComponent] = React.useState('Sellerprofile');
+  const [activeComponent, setActiveComponent] = React.useState("Sellerprofile");
   const [row, setRow] = React.useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await newRequest.post("/auth/logout");
+      localStorage.removeItem("currentUser");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -118,34 +126,41 @@ export default function MiniDrawer() {
   };
 
   const Sellerprofile = () => {
-    setActiveComponent('Sellerprofile');
+    setActiveComponent("Sellerprofile");
   };
 
   const Buyerprofile = () => {
-    setActiveComponent('Buyerprofile');
+    setActiveComponent("Buyerprofile");
   };
 
   const Gigprofile = () => {
-    setActiveComponent('Gigprofile');
+    setActiveComponent("Gigprofile");
   };
 
   const RatingProfile = () => {
-    setActiveComponent('RatingProfile');
+    setActiveComponent("RatingProfile");
   };
 
   const OrderProfile = () => {
-    setActiveComponent('OrderProfile');
+    setActiveComponent("OrderProfile");
   };
 
   const PaymentProfile = () => {
-    setActiveComponent('PaymentProfile');
+    setActiveComponent("PaymentProfile");
   };
 
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser || currentUser.value.user !== "admin") {
+      navigate("/");
+      alert("You are not authorized to view this page.");
+    }
+  }, [navigate]);
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      
+    <Box sx={{display: "flex"}}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} >
+      <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -154,112 +169,131 @@ export default function MiniDrawer() {
             edge="start"
             sx={{
               marginRight: 5,
-              ...(open && { display: 'none' }),
+              ...(open && {display: "none"}),
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" >
-          Admin Dashboard
+          <Typography variant="h6" noWrap component="div">
+            Admin Dashboard
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <Typography className='mx-5 w-100'
+          <Typography
+            className="mx-5 w-100"
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'block', sm: 'block' } }}
-            >
-            <span >Menu Bar</span>
+            sx={{display: {xs: "block", sm: "block"}}}
+          >
+            <span>Menu Bar</span>
           </Typography>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
-          
         </DrawerHeader>
         <Divider />
         <List
-          sx={{ width: '100%', maxWidth: 230, bgcolor: 'background.paper'}}
+          sx={{width: "100%", maxWidth: 230, bgcolor: "background.paper"}}
           component="nav"
           aria-labelledby="nested-list-subheader"
           subheader={
             <ListSubheader component="div" id="nested-list-subheader" />
-            
           }
         >
-          
           <br />
-          
-          <ListItemButton className='active' onClick={Sellerprofile}>
+
+          <ListItemButton
+            onClick={Sellerprofile}
+            selected={activeComponent === "Sellerprofile"}
+          >
             <ListItemIcon>
-              <ManageAccountsIcon sx={activeComponent === 'Sellerprofile'} />
+              <ManageAccountsIcon />
             </ListItemIcon>
-            <ListItemText primary={<span >Seller Profile</span>} sx={activeComponent === 'Sellerprofile' } />
+            <ListItemText primary="Seller Profile" />
           </ListItemButton>
           <br />
           <br />
-          <ListItemButton onClick={Buyerprofile}>
+          <ListItemButton
+            onClick={Buyerprofile}
+            selected={activeComponent === "Buyerprofile"}
+          >
             <ListItemIcon>
-              <AccountCircleIcon sx={activeComponent === 'Buyerprofile'} />
+              <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary={<span>Buyer Profile</span>} sx={activeComponent === 'Buyerprofile' } />
+            <ListItemText primary="Buyer Profile" />
           </ListItemButton>
           <br />
           <br />
-          <ListItemButton onClick={Gigprofile}>
+          <ListItemButton
+            onClick={Gigprofile}
+            selected={activeComponent === "Gigprofile"}
+          >
             <ListItemIcon>
               <Badge badgeContent={row} color="success">
-                <HomeRepairServiceIcon sx={activeComponent === 'Gigprofile'} />
+                <HomeRepairServiceIcon />
               </Badge>
             </ListItemIcon>
-            <ListItemText primary={<span>Gig Profile</span>} sx={activeComponent === 'Gigprofile' } />
+            <ListItemText primary="Gig Profile" />
           </ListItemButton>
           <br />
           <br />
-          <ListItemButton onClick={RatingProfile}>
+          <ListItemButton
+            onClick={RatingProfile}
+            selected={activeComponent === "RatingProfile"}
+          >
             <ListItemIcon>
-              <GradeIcon sx={activeComponent === 'RatingProfile' } />
+              <GradeIcon />
             </ListItemIcon>
-            <ListItemText primary={<span >Rating Profile</span>} sx={activeComponent === 'RatingProfile' } />
+            <ListItemText primary="Rating Profile" />
           </ListItemButton>
           <br />
           <br />
-          <ListItemButton onClick={OrderProfile}>
+          <ListItemButton
+            onClick={OrderProfile}
+            selected={activeComponent === "OrderProfile"}
+          >
             <ListItemIcon>
-              <DvrIcon sx={activeComponent === 'OrderProfile' } />
+              <DvrIcon />
             </ListItemIcon>
-            <ListItemText primary={<span >Order Profile</span>} sx={activeComponent === 'OrderProfile'} />
+            <ListItemText primary="Order Profile" />
           </ListItemButton>
           <br />
           <br />
-          <ListItemButton onClick={PaymentProfile}>
+          <ListItemButton
+            onClick={PaymentProfile}
+            selected={activeComponent === "PaymentProfile"}
+          >
             <ListItemIcon>
-              <AddCardIcon sx={activeComponent === 'PaymentProfile'} />
+              <AddCardIcon />
             </ListItemIcon>
-            <ListItemText primary={<span >Payment Profile</span>} sx={activeComponent === 'PaymentProfile'} />
+            <ListItemText primary="Payment Profile" />
           </ListItemButton>
           <br />
           <br />
-          <Link to='/' onClick={handleLogout}>
-            <ListItemButton>
-              <ListItemIcon>
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText primary={<span>Logout</span>} />
-            </ListItemButton>
-          </Link>
+
+          <ListItemButton onClick={handleLogout}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3}}>
+      <Box component="main" sx={{flexGrow: 1, p: 3}}>
         <DrawerHeader />
-        {activeComponent === 'Gigprofile' && <CSSGridG />}
-        {activeComponent === 'Buyerprofile' && <CSSGridB />}
-        {activeComponent === 'Sellerprofile' && <CSSGridS />}
-        {activeComponent === 'OrderProfile' && <CSSGridO />}
-        {activeComponent === 'PaymentProfile' && <CSSGridP />}
-        {activeComponent === 'RatingProfile' && <CSSGridR />}
+        {activeComponent === "Gigprofile" && <CSSGridG />}
+        {activeComponent === "Buyerprofile" && <CSSGridB />}
+        {activeComponent === "Sellerprofile" && <CSSGridS />}
+        {activeComponent === "OrderProfile" && <CSSGridO />}
+        {activeComponent === "PaymentProfile" && <CSSGridP />}
+        {activeComponent === "RatingProfile" && <CSSGridR />}
       </Box>
     </Box>
   );

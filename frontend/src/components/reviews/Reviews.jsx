@@ -39,8 +39,24 @@ const Reviews = ({gigId}) => {
     const star = value;
 
     try {
+      // Fetch token from local storage or wherever it's stored
+      const token = localStorage.getItem("accessToken");
+
       // Send POST request to add a new review using Axios
-      const response = await newRequest.post("/reviews", {gigId, desc, star});
+      const response = await newRequest.post(
+        "/reviews",
+        {
+          gigId,
+          desc,
+          star,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       // Update reviews state with newly added review
       setReviews([...reviews, response.data]); // Assuming response.data is the newly added review
       setNewReviewDesc(""); // Clear new review description input field

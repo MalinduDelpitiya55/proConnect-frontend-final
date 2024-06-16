@@ -1,127 +1,139 @@
-import  { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "./Profileedit.scss";
-import Axios from "axios";
-import Noavatar from "./../../../public/img/noavatar.jpg";
-import newRequest from "./../../utils/newRequest.js";
-import getCurrentUser from "./../../utils/getCurrentUser.js";
+import Axios from "axios"; // Import Axios for making HTTP requests
+import Noavatar from "./../../../public/img/noavatar.jpg"; // Placeholder image
+import newRequest from "./../../utils/newRequest.js"; // Custom utility function for HTTP requests
+import getCurrentUser from "./../../utils/getCurrentUser.js"; // Utility function to get current user data
 
 const CVSection = () => {
-  // Get user data
-  const [buyers, setBuyers] = useState(null);
-  const [user, setUser] = useState(null);
+  // State to store buyer and user data
+  const [buyers, setBuyers] = useState(null); // State for buyer data
+  const [user, setUser] = useState(null); // State for user data
 
-  // Form data and submission
+  // State for form data and validation
   const [formData, setFormData] = useState({
-    title: "",
-    skills: ["", "", ""],
-    qualifications: ["", ""],
+    title: "", // Title field
+    skills: ["", "", ""], // Array of technical skills
+    qualifications: ["", ""], // Array of qualifications
     education: [
-      { institution: "", degree: "" },
-      { institution: "", degree: "" },
+      {institution: "", degree: ""}, // Education object 1
+      {institution: "", degree: ""}, // Education object 2
     ],
   });
 
-  // Validation state
+  // State for validation errors
   const [errors, setErrors] = useState({
-    skills: ["", "", ""],
-    qualifications: ["", ""],
+    skills: ["", "", ""], // Errors for skills
+    qualifications: ["", ""], // Errors for qualifications
     education: [
-      { institution: "", degree: "" },
-      { institution: "", degree: "" },
+      {institution: "", degree: ""}, // Errors for education object 1
+      {institution: "", degree: ""}, // Errors for education object 2
     ],
   });
 
+  // State for success or error message after form submission
   const [message, setMessage] = useState("");
 
+  // useEffect hook to fetch buyer data when component mounts
   useEffect(() => {
-    fetchBuyers();
-  }, []);
+    fetchBuyers(); // Fetch buyers data
+  }, []); // Empty dependency array ensures this effect runs once on mount
 
+  // Function to fetch buyers data
   const fetchBuyers = async () => {
     try {
-      const currentUser = getCurrentUser();
+      const currentUser = getCurrentUser(); // Get current user
+      // Fetch seller data based on current user's ID
       const response1 = await newRequest.post(`/seller/get/${currentUser._id}`);
+      // Fetch user data based on current user's ID
       const response2 = await newRequest.get(`/users/${currentUser._id}`);
-      const sellerData = response1.data;
-      const userData = response2.data;
-      console.log(sellerData, userData);
-      console.log(userData);
-      console.log("seller =>", response1);
-      console.log("user =>", response2);
 
-      // Ensure the structure of sellerData matches the formData structure
+      const sellerData = response1.data; // Extract seller data from response
+      const userData = response2.data; // Extract user data from response
+
+      // Log data to console for debugging
+      console.log(sellerData, userData);
+
+      // Update formData state with fetched sellerData
       setFormData({
-        title: sellerData.title || "",
-        skills: sellerData.skills || ["", "", ""],
-        qualifications: sellerData.qualifications || ["", ""],
+        title: sellerData.title || "", // Title
+        skills: sellerData.skills || ["", "", ""], // Skills array
+        qualifications: sellerData.qualifications || ["", ""], // Qualifications array
         education: sellerData.education || [
-          { institution: "", degree: "" },
-          { institution: "", degree: "" },
+          {institution: "", degree: ""}, // Education object 1
+          {institution: "", degree: ""}, // Education object 2
         ],
       });
+
+      // Set buyers and user states with fetched data
       setBuyers(sellerData);
       setUser(userData);
     } catch (error) {
-      console.error("Error fetching buyers:", error);
+      console.error("Error fetching buyers:", error); // Log error to console if fetching fails
     }
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     try {
-      const currentUser = getCurrentUser();
-      const response = await Axios.post(
-        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/seller/update/${currentUser._id}`,
+      const currentUser = getCurrentUser(); // Get current user
+      // Send POST request to update seller data with current user's ID and formData
+      const response = await newRequest.post(
+        `/seller/update/${currentUser._id}`,
         {id: currentUser._id, data: formData}
       );
-      setMessage("Edit is successful");
+      setMessage("Edit is successful"); // Set success message after successful update
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error); // Log error to console if update fails
     }
   };
 
-  // Handle input change with validation
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const [key, index, subkey] = name.split("-");
+  // Function to handle input change with validation
+const handleChange = (e) => {
+  const {name, value} = e.target; // Destructure name and value from event target
+  const [key, index, subkey] = name.split("-"); // Split name attribute to get keys
 
-    let newFormData = { ...formData };
-    let newErrors = { ...errors };
+  let newFormData = {...formData}; // Copy formData state
+  let newErrors = {...errors}; // Copy errors state
 
-    // Validation logic
-    if (key === "skills") {
-      if (/[^a-zA-Z\s]/.test(value)) {
-        newErrors.skills[index] = "Skills cannot contain symbols or numbers.";
-      } else {
-        newErrors.skills[index] = "";
-      }
-    } else if (key === "qualifications") {
-      if (/[^a-zA-Z\s]/.test(value) || value.length < 3 || value.length > 150) {
-        newErrors.qualifications[index] =
-          "Qualifications must be between 3 and 150 letters and cannot contain symbols or numbers.";
-      } else {
-        newErrors.qualifications[index] = "";
-      }
-    } else if (key === "education" && subkey) {
-      if (value.length < 2 || value.length > 175) {
-        newErrors.education[index][subkey] =
-          "Education fields must be between 2 and 175 characters.";
-      } else {
-        newErrors.education[index][subkey] = "";
-      }
-    }
-
-    // Update formData
-    if (subkey) {
-      newFormData[key][index][subkey] = value;
+  // Validation logic based on key and subkey
+  if (key === "skills") {
+    if (/[^a-zA-Z\s]/.test(value)) {
+      newErrors.skills[index] = "Skills cannot contain symbols or numbers."; // Validate skills field
     } else {
-      newFormData[key][index] = value;
+      newErrors.skills[index] = ""; // Clear error if validation passes
     }
+    newFormData.skills[index] = value; // Update skills array in formData
+  } else if (key === "qualifications") {
+    if (/[^a-zA-Z\s]/.test(value) || value.length < 3 || value.length > 150) {
+      newErrors.qualifications[index] =
+        "Qualifications must be between 3 and 150 letters and cannot contain symbols or numbers."; // Validate qualifications field
+    } else {
+      newErrors.qualifications[index] = ""; // Clear error if validation passes
+    }
+    newFormData.qualifications[index] = value; // Update qualifications array in formData
+  } else if (key === "education" && subkey) {
+    if (value.length < 2 || value.length > 175) {
+      newErrors.education[index][subkey] =
+        "Education fields must be between 2 and 175 characters."; // Validate education fields
+    } else {
+      newErrors.education[index][subkey] = ""; // Clear error if validation passes
+    }
+    newFormData.education[index] = {
+      ...newFormData.education[index],
+      [subkey]: value,
+    }; // Update education array in formData
+  } else if (key === "title") {
+    newFormData.title = value; // Update title in formData
+  } else if (key === "description") {
+    newFormData.description = value; // Update description in formData
+  }
 
-    setFormData(newFormData);
-    setErrors(newErrors);
-  };
-
+  // Set formData and errors states with updated values
+  setFormData(newFormData);
+  setErrors(newErrors);
+};
   return (
     <div className="editp">
       <section className="container" id="cv">
@@ -159,7 +171,8 @@ const CVSection = () => {
                   <option value="Programming & Tech">Programming & Tech</option>
                 </select>
               </ul>
-
+              <h3>{formData.title}</h3>{" "}
+              {/* Conditionally render selected title */}
               <h5>Technical Skills</h5>
               <ul className="skills-list">
                 {formData.skills.map((value, index) => (

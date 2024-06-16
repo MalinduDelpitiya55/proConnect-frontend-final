@@ -34,25 +34,28 @@ function Navbar() {
       console.log(err);
     }
   };
-
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
       <div className="container">
         <div className="logo">
           <Link className="link" to="/">
-            <img className="logofimg" src={Logo} alt="proconnect" width={"20%"}/>
+            <img
+              className="logofimg"
+              src={Logo}
+              alt="proconnect"
+              width={"20%"}
+            />
           </Link>
         </div>
         <div className="links">
-          <span>English</span>
-          {!currentUser?.isSeller && <span>Become a Seller</span>}
+          
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
-              <img src={currentUser.img || "/img/noavatar.jpg"} alt="" />
-              <span>{currentUser?.username}</span>
+              <img src={currentUser.value.img || "/img/noavatar.jpg"} alt="" />
+              <span>{currentUser?.value.username}</span>
               {open && (
                 <div className="options">
-                  {currentUser.isSeller && (
+                  {currentUser.value.isSeller && (
                     <>
                       <Link className="link" to="/profile">
                         Profile

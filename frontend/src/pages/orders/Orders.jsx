@@ -1,27 +1,39 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import "./Orders.scss";
-import {useQuery} from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import getCurrentUser from "./../../utils/getCurrentUser.js";
-import axios from 'axios'
+import axios from "axios";
+
 const Orders = () => {
   const currentUser = getCurrentUser();
   const [editingOrder, setEditingOrder] = useState(null);
   const [editedRequirements, setEditedRequirements] = useState("");
-
   const navigate = useNavigate();
-  const {isLoading, error, data, refetch} = useQuery({
-    queryKey: ["orders"],
-    queryFn: () =>
-      newRequest.get(`/orders`).then((res) => {
-        return res.data;
-      }),
-  });
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Function to fetch orders
+  const fetchOrders = async () => {
+    try {
+      const res = await newRequest.get(`/orders`);
+      setOrders(res.data); // Set orders from the response
+      setIsLoading(false); // Set loading to false after fetching
+    } catch (err) {
+      setError(err); // Set error if request fails
+      setIsLoading(false); // Set loading to false
+    }
+  };
+
+  // Fetch orders on component mount
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  // Function to handle contacting a user
   const handleContact = async (order) => {
-    const sellerId = order.sellerId;
-    const buyerId = order.buyerId;
+    const {sellerId, buyerId} = order;
     const id = sellerId + buyerId;
 
     try {
@@ -37,24 +49,24 @@ const Orders = () => {
     }
   };
 
+  // Function to handle editing an order
   const handleEdit = (order) => {
-    setEditingOrder(order);
-    setEditedRequirements(order.requirements);
+    setEditingOrder(order); // Set the order being edited
+    setEditedRequirements(order.requirements); // Set initial requirements for editing
   };
 
+  // Function to handle saving the edited order
   const handleSave = async () => {
     try {
-      console.log(editingOrder._id);
-      await axios.post(
-        `https://fiverr-clone-backend-git-main-malindudelpitiya55s-projects.vercel.app/api/orders/updateOrder/${editingOrder._id}`,
+      await newRequest.post(
+        `/orders/updateOrder/${editingOrder._id}`,
         {
           orderId: editingOrder._id,
           requirements: editedRequirements,
         }
       );
-      // Refresh the data after saving
-      await refetch();
-      setEditingOrder(null);
+      await fetchOrders(); // Refresh orders after saving
+      setEditingOrder(null); // Clear editing state
     } catch (error) {
       console.error("Error updating order:", error);
     }
@@ -63,9 +75,9 @@ const Orders = () => {
   return (
     <div className="orders">
       {isLoading ? (
-        "loading"
+        "loading" // Show loading indicator while fetching data
       ) : error ? (
-        "error"
+        "error" // Show error message if fetching data fails
       ) : (
         <div className="container">
           <div className="title">
@@ -83,7 +95,7 @@ const Orders = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((order) => (
+              {orders.map((order) => (
                 <tr key={order._id}>
                   <td>
                     <img className="image" src={order.img} alt="" />
@@ -110,7 +122,7 @@ const Orders = () => {
                     />
                   </td>
                   <td>
-                    {currentUser.isSeller === false &&
+                    {!currentUser.isSeller && // Only show edit button for buyers
                       (editingOrder === order ? (
                         <button onClick={handleSave}>Save</button>
                       ) : (

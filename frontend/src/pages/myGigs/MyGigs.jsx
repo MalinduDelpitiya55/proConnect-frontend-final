@@ -1,68 +1,70 @@
-// src/components/MyGigs/MyGigs.jsx
-
-import React, {useState} from "react";
-import {Link} from "react-router-dom";
-import "./MyGigs.scss";
-import getCurrentUser from "../../utils/getCurrentUser";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import newRequest from "../../utils/newRequest";
+import React, {useState, useEffect} from "react"; // Import necessary hooks from React
+import {Link} from "react-router-dom"; // Import Link for routing
+import "./MyGigs.scss"; // Import stylesheet for MyGigs component
+import getCurrentUser from "../../utils/getCurrentUser"; // Import the utility to get the current user
+import newRequest from "../../utils/newRequest"; // Import the utility for making HTTP requests
 
 function MyGigs() {
-  const currentUser = getCurrentUser();
-  const queryClient = useQueryClient();
-  const user = localStorage.getItem("currentUser");
-  const userObject = JSON.parse(user);
-  const [editGig, setEditGig] = useState(null);
-  const [newTitle, setNewTitle] = useState("");
+  const currentUser = getCurrentUser(); // Get the current user
+  const [gigs, setGigs] = useState([]); // State to store gigs
+  const [isLoading, setIsLoading] = useState(true); // State to track loading status
+  const [error, setError] = useState(null); // State to track error
+  const [editGig, setEditGig] = useState(null); // State to track the gig being edited
+  const [newTitle, setNewTitle] = useState(""); // State to store new title for editing
 
-  const {isLoading, error, data} = useQuery({
-    queryKey: ["myGigs"],
-    queryFn: () =>
-      newRequest.get(`/gigs?userId=${currentUser._id}`).then((res) => res.data),
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id) => newRequest.delete(`/gigs/${id}`),
-    onSuccess: () => queryClient.invalidateQueries(["myGigs"]),
-  });
-
-  const updateMutation = useMutation({
-    
-    mutationFn: (updatedGig) => {
-      console.log(userObject._id);
-      console.log(updatedGig);
-       newRequest.post(`/gigs/updategig/${updatedGig._id}`, {
-         userID: userObject._id,
-         gig: updatedGig,
-       });
-      
-     },
-     onSuccess: () => {queryClient.invalidateQueries(["myGigs"])},
-     onError: (error) => {
-       console.error("Error updating gig:", error);
-     },
-   });
-
-  const handleDelete = (id) => {
-    deleteMutation.mutate(id);
+  // Function to fetch gigs
+  const fetchGigs = async () => {
+    try {
+      const res = await newRequest.get(`/gigs?userId=${currentUser._id}`); // Make GET request to fetch gigs
+      setGigs(res.data); // Set gigs data
+      setIsLoading(false); // Set loading to false
+    } catch (err) {
+      setError(err); // Set error if request fails
+      setIsLoading(false); // Set loading to false
+    }
   };
 
+  // Fetch gigs on component mount
+  useEffect(() => {
+    fetchGigs();
+  }, []);
+
+  // Function to delete a gig
+  const handleDelete = async (id) => {
+    try {
+      await newRequest.delete(`/gigs/${id}`); // Make DELETE request to delete gig
+      fetchGigs(); // Refetch gigs after deletion
+    } catch (err) {
+      setError(err); // Set error if request fails
+    }
+  };
+
+  // Function to edit a gig
   const handleEdit = (gig) => {
-    setEditGig(gig._id);
-    setNewTitle(gig.title);
+    setEditGig(gig._id); // Set the gig being edited
+    setNewTitle(gig.title); // Set the current title of the gig in the input
   };
 
-  const handleSave = (id) => {
-    updateMutation.mutate({_id: id, title: newTitle});
-    setEditGig(null);
+  // Function to save the edited gig
+  const handleSave = async (id) => {
+    try {
+      await newRequest.post(`/gigs/updategig/${id}`, {
+        userID: currentUser._id,
+        gig: {title: newTitle},
+      }); // Make POST request to update gig
+      setEditGig(null); // Clear the editing state
+      fetchGigs(); // Refetch gigs after updating
+    } catch (err) {
+      setError(err); // Set error if request fails
+    }
   };
 
   return (
     <div className="myGigs">
       {isLoading ? (
-        "Loading..."
+        "Loading..." // Show loading indicator
       ) : error ? (
-        <div>Error: {error.message}</div>
+        <div>Error: {error.message}</div> // Show error message
       ) : (
         <div className="container">
           <div className="title">
@@ -73,7 +75,7 @@ function MyGigs() {
               </Link>
             )}
           </div>
-          {data.length > 0 ? (
+          {gigs.length > 0 ? (
             <table>
               <thead>
                 <tr>
@@ -85,7 +87,7 @@ function MyGigs() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((gig) => (
+                {gigs.map((gig) => (
                   <tr key={gig._id}>
                     <td>
                       <img className="image" src={gig.cover} alt={gig.title} />
@@ -131,4 +133,4 @@ function MyGigs() {
   );
 }
 
-export default MyGigs;
+export default MyGigs; // Export the MyGigs component
